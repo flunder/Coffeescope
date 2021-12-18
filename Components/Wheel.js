@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import { Animated, Dimensions, Text, View } from 'react-native';
 import { STAR_SIGNS } from '../constants.js';
 import Svg, { Path } from 'react-native-svg';
@@ -6,7 +7,7 @@ import { Colors } from '../theme';
 
 const { width, height } = Dimensions.get('window');
 const wheelImage = require('../Assets/Images/wheel3.png');
-const WHEEL_SIZE = width * 2;
+const WHEEL_SIZE = height / 1.1;
 const SNAP_WIDTH = width / 5;
 
 function Wheel({ selectedRef }) {
@@ -23,6 +24,7 @@ function Wheel({ selectedRef }) {
     if (viewableItems.length === 0) return;
     const page = viewableItems[0].index + 1;
     // setPageIndex(page);
+    vibrate();
     selectedRef.current.setNativeProps({
       text: `${page} /  ${viewableItems[0]?.item?.name}`,
     });
@@ -66,6 +68,10 @@ function Wheel({ selectedRef }) {
       />
     );
   };
+
+  const vibrate = () => {
+    ReactNativeHapticFeedback.trigger('impactLight');
+  }
 
   return (
     <View style={styles.container}>
@@ -113,7 +119,6 @@ function Wheel({ selectedRef }) {
           minIndexForVisible: 0,
         }}
       />
-
     </View>
   );
 }
@@ -131,7 +136,6 @@ const styles = {
     bottom: -(WHEEL_SIZE / 2),
   },
   scroller: {
-    backgroundColor: 'red',
     height: WHEEL_SIZE / 2,
     position: 'absolute',
     width: '100%',
